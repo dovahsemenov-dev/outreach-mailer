@@ -1,0 +1,18 @@
+{
+  "providers": [
+    {
+      "id": "deepseek-official",
+      "baseUrl": "https://api.deepseek.com",
+      "apiKey": "",
+      "model": "deepseek-flash",
+      "enabled": true
+    },
+    {
+      "id": "free-gateway-1",
+      "baseUrl": "https://example-gateway.example/v1",
+      "apiKey": "",
+      "model": "deepseek/deepseek-flash",
+      "enabled": false
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "max_per_run": 10,
+  "pause_min": 19,
+  "pause_max": 58,
+  "attach_resume": true,
+  "send_copy_to_self": true,
+  "allow_resend": false
+}

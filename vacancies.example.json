@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Тестировщик (manual QA)",
+    "company": "Ромашка",
+    "description": "Ручное тестирование веб-приложения, оформление баг-репортов, работа с Jira.",
+    "hr_email": "hr@romashka.ru"
+  },
+  {
+    "title": "",
+    "company": "ООО «Вектор»",
+    "description": "",
+    "hr_email": "hr@vector.example"
+  }
+]

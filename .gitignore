@@ -1,0 +1,18 @@
+# секреты и персональные данные — в git не попадают
+.env
+llm_providers.json
+settings.json
+sent_log.csv
+resume*.pdf
+profile.txt
+profile_letters.txt
+vacancies.json
+emails_found.csv
+emails_ready.csv
+sites_qa.csv
+bot.lock
+logs/
+drafts/
+__pycache__/
+.pytest_cache/
+*.pyc
