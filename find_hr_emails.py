@@ -57,9 +57,11 @@ def make_session(trust_env):
 
 
 def fetch(session, url):
-    for verify in (True, False):
+    """GET с проверкой TLS-сертификата (всегда включена); одна повторная
+    попытка при сетевой ошибке — тоже с проверкой."""
+    for _attempt in (1, 2):
         try:
-            r = session.get(url, timeout=10, verify=verify)
+            r = session.get(url, timeout=10, verify=True)
             if r.status_code == 200 and "text" in r.headers.get("Content-Type", "text"):
                 return r.text
             return ""

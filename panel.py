@@ -477,24 +477,36 @@ function fillEnv(env) {
 
 function fillStats(stats) {
   var c = stats.counts;
-  document.getElementById("stats_counts").innerHTML =
-      "<span>Всего записей: " + c.total + "</span>" +
-      "<span>Отправлено: " + c.sent + "</span>" +
-      "<span>Пропущено: " + c.skipped + "</span>" +
-      "<span>Ошибок: " + c.error + "</span>";
-  var html = "";
-  if (stats.last.length) {
-    html = "<table><tr><th>Дата</th><th>Компания</th><th>Вакансия</th><th>Кому</th><th>Статус</th></tr>";
-    stats.last.forEach(function (r) {
-      html += "<tr><td>" + (r.datetime || "") + "</td><td>" + (r.company || "") + "</td><td>" +
-              (r.vacancy || "") + "</td><td>" + (r.to_email || "") + "</td><td>" +
-              (r.status || "") + "</td></tr>";
-    });
-    html += "</table>";
-  } else {
-    html = "<p>Пока ничего не отправлялось.</p>";
+  var counts = document.getElementById("stats_counts");
+  counts.textContent = "";
+  [["Всего записей: ", c.total], ["Отправлено: ", c.sent],
+   ["Пропущено: ", c.skipped], ["Ошибок: ", c.error]].forEach(function (pair) {
+    var span = document.createElement("span");
+    span.textContent = pair[0] + pair[1];
+    counts.appendChild(span);
+  });
+  var wrap = document.getElementById("stats_last");
+  wrap.textContent = "";
+  if (!stats.last.length) {
+    var empty = document.createElement("p");
+    empty.textContent = "Пока ничего не отправлялось.";
+    wrap.appendChild(empty);
+    return;
   }
-  document.getElementById("stats_last").innerHTML = html;
+  var table = document.createElement("table");
+  var headRow = table.insertRow();
+  ["Дата", "Компания", "Вакансия", "Кому", "Статус"].forEach(function (title) {
+    var th = document.createElement("th");
+    th.textContent = title;
+    headRow.appendChild(th);
+  });
+  stats.last.forEach(function (r) {
+    var row = table.insertRow();
+    ["datetime", "company", "vacancy", "to_email", "status"].forEach(function (key) {
+      row.insertCell().textContent = r[key] || "";
+    });
+  });
+  wrap.appendChild(table);
 }
 
 function loadState() {

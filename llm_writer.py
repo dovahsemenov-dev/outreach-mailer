@@ -14,13 +14,8 @@ import os
 import re
 
 import requests
-import urllib3
 
 import config
-
-# часть бесплатных роутеров отвечает с просроченным сертификатом
-# (allowExpiredTls в исходном конфиге) — глушим предупреждения urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 _MIN_BODY_WORDS = 25  # sanity-порог: короче — ответ считается ошибочным
 # Статусы, при которых повторять этого же провайдера бессмысленно:
@@ -157,8 +152,6 @@ def _load_providers():
                 "base_url": (entry.get("baseUrl") or "").rstrip("/"),
                 "model": entry.get("model") or "",
                 "api_key": entry["apiKey"],
-                # allowExpiredTls из исходного конфига = отключить проверку TLS
-                "verify_tls": not entry.get("allowExpiredTls", False),
             })
     if not providers:
         api_key = os.environ.get("DEEPSEEK_API_KEY")
@@ -168,7 +161,6 @@ def _load_providers():
                 "base_url": config.DEEPSEEK_BASE_URL,
                 "model": config.DEEPSEEK_MODEL,
                 "api_key": api_key,
-                "verify_tls": True,
             })
     return providers
 
@@ -193,15 +185,12 @@ def _call_provider(provider, prompt):
         "Authorization": "Bearer " + provider["api_key"],
         "Content-Type": "application/json",
     }
-    if not provider["verify_tls"]:
-        logging.warning("%s: проверка TLS-сертификата отключена (allowExpiredTls)",
-                        provider["id"])
     resp = requests.post(
         provider["base_url"] + "/chat/completions",
         json=payload,
         headers=headers,
         timeout=config.DEEPSEEK_TIMEOUT,
-        verify=provider["verify_tls"],
+        verify=True,  # проверка TLS-сертификата всегда включена
     )
     if resp.status_code != 200:
         detail = ""

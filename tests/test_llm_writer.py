@@ -229,17 +229,6 @@ def test_disabled_providers_are_skipped(monkeypatch):
     assert [c["url"] for c in calls] == ["https://on.example/v1/chat/completions"]
 
 
-def test_allow_expired_tls_disables_verification(monkeypatch):
-    _write_providers(config.LLM_PROVIDERS_JSON, [
-        {"id": "p1", "baseUrl": "https://p1.example/v1", "apiKey": "k1",
-         "model": "m", "enabled": True, "allowExpiredTls": True},
-    ])
-    calls = []
-    _patch_api(monkeypatch, [_ok_response(SUBJECT + "\n\n" + BODY)], calls)
-    assert llm_writer.generate_letter("QA", "Ромашка", "Описание", "Профиль") is not None
-    assert calls[0]["verify"] is False
-
-
 def test_tls_verification_on_by_default(monkeypatch):
     _write_providers(config.LLM_PROVIDERS_JSON, [
         {"id": "p1", "baseUrl": "https://p1.example/v1", "apiKey": "k1",
